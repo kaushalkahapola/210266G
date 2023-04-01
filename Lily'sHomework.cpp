@@ -13,9 +13,42 @@ vector<string> split(const string &);
  * The function accepts INTEGER_ARRAY arr as parameter.
  */
 
-int lilysHomework(vector<int> arr) {
+using namespace std;
 
+int numofswap(vector<int> arr, vector<int> sorted) {
+    unordered_map<int, int> indexes;
+    for (int i = 0; i < static_cast<int>(arr.size()); i++) {
+        indexes[arr[i]] = i;
+    }
+    int swaps = 0;
+    for (int i = 0; i < static_cast<int>(arr.size()); i++) {
+        if (arr[i] != sorted[i]) {
+            int index = indexes[sorted[i]];
+            swap(arr[i], arr[index]);
+            swaps++;
+            indexes[arr[i]] = i; // update index for arr[i]
+            indexes[arr[index]] = index; // update index for arr[index]
+        }
+    }
+    return swaps;
 }
+
+int lilysHomework(vector<int> arr) {
+    vector<int> sorted = arr;
+    sort(sorted.begin(), sorted.end());
+    vector<int> arr_copy = arr; // make a copy of the original array
+    int swapOrg = numofswap(arr_copy, sorted);
+
+    vector<int> rev_sorted = arr;
+    sort(rev_sorted.begin(), rev_sorted.end(), greater<int>());
+    arr_copy = arr; // reset the copy of the original array
+    int swapRev = numofswap(arr_copy, rev_sorted);
+
+    return min(swapOrg, swapRev);
+}
+
+
+
 
 int main()
 {
